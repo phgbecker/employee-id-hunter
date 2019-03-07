@@ -2,9 +2,9 @@ package com.phgbecker.employeeidhunter.schedule;
 
 import com.phgbecker.employeeidhunter.dao.EmployeeDAO;
 import com.phgbecker.employeeidhunter.entity.Employee;
-import com.phgbecker.employeeidhunter.implementation.EmployeeWithoutId;
-import com.phgbecker.employeeidhunter.implementation.NotifyEmployee;
-import com.phgbecker.employeeidhunter.implementation.SearchEmployeeId;
+import com.phgbecker.employeeidhunter.schedule.implementation.EmployeeWithoutId;
+import com.phgbecker.employeeidhunter.schedule.implementation.NotifyEmployee;
+import com.phgbecker.employeeidhunter.schedule.implementation.SearchEmployeeId;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +21,9 @@ public class EmployeeIdSearchSchedule {
         employees = employeeDAO.getEmployees();
     }
 
+    /**
+     * Schedule task that hunts for employee IDs
+     */
     @Scheduled(fixedDelay = 1800000)
     public void search() {
         employees.stream()

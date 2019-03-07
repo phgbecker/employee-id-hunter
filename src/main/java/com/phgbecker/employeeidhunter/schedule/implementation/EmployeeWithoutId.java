@@ -1,4 +1,4 @@
-package com.phgbecker.employeeidhunter.implementation;
+package com.phgbecker.employeeidhunter.schedule.implementation;
 
 import java.util.function.Predicate;
 

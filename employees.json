@@ -1,15 +1,18 @@
-[ {
-  "id" : null,
-  "firstName" : "Jane",
-  "lastName" : "Doe",
-  "email" : "jane@foo.com",
-  "mobileDDD" : null,
-  "mobileNumber" : null
-}, {
-  "id" : null,
-  "firstName" : "John",
-  "lastName" : "Doe",
-  "email" : "john@foo.com",
-  "mobileDDD" : null,
-  "mobileNumber" : null
-} ]
+[
+  {
+    "id": null,
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "jane@foo.com",
+    "mobileDDD": null,
+    "mobileNumber": null
+  },
+  {
+    "id": null,
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@foo.com",
+    "mobileDDD": null,
+    "mobileNumber": null
+  }
+]

@@ -104,14 +104,14 @@ public class SearchEmployeeId implements Consumer<Employee> {
 	 *
 	 * @param employeeJson Employee JSON file
 	 * @param connection Connection instance
-	 * @throws Exception Exception
+	 * @throws IOException OutputStream IOException
 	 */
-	private void postEmployeeSearch(String employeeJson, HttpURLConnection connection) throws Exception {
+	private void postEmployeeSearch(String employeeJson, HttpURLConnection connection) throws IOException {
 		try (DataOutputStream dataOutStream = new DataOutputStream(connection.getOutputStream())) {
 			dataOutStream.writeBytes(employeeJson);
 			dataOutStream.flush();
-		} catch (Exception e) {
-			throw new Exception("Oops, something wrong happened while posting the search - " + e.getMessage());
+		} catch (IOException e) {
+			throw new IOException("Oops, something wrong happened while posting the search - " + e.getMessage());
 		}
 	}
 
@@ -120,9 +120,9 @@ public class SearchEmployeeId implements Consumer<Employee> {
 	 *
 	 * @param connection Connection instance
 	 * @return String
-	 * @throws Exception Exception
+	 * @throws IOException Exception
 	 */
-	private String getEmployeeSearchResponse(HttpURLConnection connection) throws Exception {
+	private String getEmployeeSearchResponse(HttpURLConnection connection) throws IOException {
 		InputStream stream = connection.getInputStream();
 		StringBuilder response = new StringBuilder();
 
@@ -132,8 +132,8 @@ public class SearchEmployeeId implements Consumer<Employee> {
 			while((bufferString = inputBuffer.readLine()) != null) {
 				response.append(bufferString);
 			}
-		} catch (Exception e) {
-			throw new Exception("Oops, something wrong happened while reading the search response - " + e.getMessage());
+		} catch (IOException e) {
+			throw new IOException("Oops, something wrong happened while reading the search response - " + e.getMessage());
 		}
 
 		return response.toString();

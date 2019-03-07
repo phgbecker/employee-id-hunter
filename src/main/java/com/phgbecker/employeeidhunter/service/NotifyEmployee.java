@@ -14,7 +14,7 @@ import com.phgbecker.employeeidhunter.entity.Employee;
 public class NotifyEmployee implements Consumer<Employee> {
 	private static Logger log = LoggerFactory.getLogger(NotifyEmployee.class);
 	private static SMSService smsService = new SMSService("", "");
-	private static final String DEFAULT_MESSAGE = "Dear %s, take note, your mastercard credential has arrived: %s (by eID Hunter)";
+	private static final String DEFAULT_MESSAGE = "Dear %s, take note, your credential has arrived: %s (by eID Hunter)";
 
 	@Override
 	public void accept(Employee employee) {
@@ -27,8 +27,7 @@ public class NotifyEmployee implements Consumer<Employee> {
 				Optional<String> mobileDDD = employee.getMobileDDD();
 				Optional<String> mobileNumber = employee.getMobileNumber();
 
-				if (mobileDDD.isPresent() && !mobileDDD.get().isEmpty()
-						&& mobileNumber.isPresent() && !mobileNumber.get().isEmpty()) {
+				if (mobileDDD.isPresent() && !mobileDDD.get().isEmpty() && mobileNumber.isPresent() && !mobileNumber.get().isEmpty()) {
 					smsService.enviarSMS(
 							mobileDDD.get(),
 							mobileNumber.get(),

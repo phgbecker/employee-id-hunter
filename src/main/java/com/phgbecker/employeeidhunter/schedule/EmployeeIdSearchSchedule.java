@@ -15,15 +15,15 @@ import com.phgbecker.employeeidhunter.service.SearchEmployeeId;
 
 @Component
 public class EmployeeIdSearchSchedule {
-	private static String employeesFile = "employees.json";
-	private static List<Employee> employees;
+	private static final String EMPLOYEES_FILE = "employees.json";
+	private List<Employee> employees;
 
-	public EmployeeIdSearchSchedule() throws Exception {
+	public EmployeeIdSearchSchedule() throws IOException {
 		employees = getListOfEmployeesWithoutId();
 	}
 
 	/**
-	 * Parse the "employees.json" file elements to a Collection of Employee
+	 * Parse the EMPLOYEES_FILE file elements to a Collection of Employee
 	 *
 	 * @return
 	 * @throws IOException
@@ -31,8 +31,10 @@ public class EmployeeIdSearchSchedule {
 	private List<Employee> getListOfEmployeesWithoutId() throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		return objectMapper.readValue(new File(employeesFile),
-				objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class));
+		return objectMapper.readValue(
+					new File(EMPLOYEES_FILE),
+					objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class)
+				);
 	}
 
 	/**
@@ -41,7 +43,8 @@ public class EmployeeIdSearchSchedule {
 	@Scheduled(fixedDelay = 3600000)
 	public void search() {
 		employees.stream()
-		.filter(new EmployeeWithoutId())
-		.forEach(new SearchEmployeeId().andThen(new NotifyEmployee()));
+				.filter(new EmployeeWithoutId())
+				.forEach(new SearchEmployeeId().andThen(new NotifyEmployee())
+		);
 	}
 }

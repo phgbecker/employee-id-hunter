@@ -91,6 +91,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
             connection.setReadTimeout(10000);
             connection.setRequestMethod("POST");
             connection.setDoInput(true);
+            connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE);
             connection.setRequestProperty("Authorization", API_AUTH_TOKEN);
         } catch (IOException e) {

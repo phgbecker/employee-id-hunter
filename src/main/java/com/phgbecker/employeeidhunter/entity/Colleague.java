@@ -14,13 +14,13 @@ import lombok.Setter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Colleague {
 
-	@XmlElement(name = "AccountName")
-	private String accountName;
+    @XmlElement(name = "AccountName")
+    private String accountName;
 
-	@XmlElement(name = "Name")
-	private String name;
+    @XmlElement(name = "Name")
+    private String name;
 
-	@XmlElement(name = "TextAlias")
-	private String textAlias;
+    @XmlElement(name = "TextAlias")
+    private String textAlias;
 
 }

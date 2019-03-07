@@ -1,50 +1,33 @@
 package com.phgbecker.employeeidhunter.schedule;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
+import com.phgbecker.employeeidhunter.dao.EmployeeDAO;
+import com.phgbecker.employeeidhunter.entity.Employee;
+import com.phgbecker.employeeidhunter.implementation.EmployeeWithoutId;
+import com.phgbecker.employeeidhunter.implementation.NotifyEmployee;
+import com.phgbecker.employeeidhunter.implementation.SearchEmployeeId;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.phgbecker.employeeidhunter.entity.Employee;
-import com.phgbecker.employeeidhunter.service.EmployeeWithoutId;
-import com.phgbecker.employeeidhunter.service.NotifyEmployee;
-import com.phgbecker.employeeidhunter.service.SearchEmployeeId;
+import java.io.IOException;
+import java.util.List;
 
 @Component
 public class EmployeeIdSearchSchedule {
-	private static final String EMPLOYEES_FILE = "employees.json";
-	private List<Employee> employees;
+    private EmployeeDAO employeeDAO;
+    private List<Employee> employees;
 
-	public EmployeeIdSearchSchedule() throws IOException {
-		employees = getListOfEmployeesWithoutId();
-	}
+    public EmployeeIdSearchSchedule() throws IOException {
+        employeeDAO = new EmployeeDAO();
+        employees = employeeDAO.getEmployees();
+    }
 
-	/**
-	 * Parse the EMPLOYEES_FILE file elements to a Collection of Employee
-	 *
-	 * @return
-	 * @throws IOException
-	 */
-	private List<Employee> getListOfEmployeesWithoutId() throws IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
+    @Scheduled(fixedDelay = 1800000)
+    public void search() {
+        employees.stream()
+                .filter(new EmployeeWithoutId())
+                .forEach(new SearchEmployeeId().andThen(new NotifyEmployee()));
 
-		return objectMapper.readValue(
-					new File(EMPLOYEES_FILE),
-					objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class)
-				);
-	}
+        employeeDAO.saveToFile(employees);
+    }
 
-	/**
-	 * Task that hunts for employee IDs
-	 */
-	@Scheduled(fixedDelay = 3600000)
-	public void search() {
-		employees.stream()
-				.filter(new EmployeeWithoutId())
-				.forEach(new SearchEmployeeId().andThen(new NotifyEmployee())
-		);
-	}
 }

@@ -16,7 +16,7 @@ import lombok.Setter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ArrayOfColleague {
 
-	@XmlElement(name = "Colleague")
-	private List<Colleague> colleagues;
+    @XmlElement(name = "Colleague")
+    private List<Colleague> colleagues;
 
 }

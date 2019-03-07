@@ -69,7 +69,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
-            log.error("Oops, and exception happend while sleeping the thread", e);
+            log.error("Oops, an exception happened while sleeping the thread", e);
 
             Thread.currentThread().interrupt();
         }
@@ -95,7 +95,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
             connection.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE);
             connection.setRequestProperty("Authorization", API_AUTH_TOKEN);
         } catch (IOException e) {
-            throw new IOException("Oops, something wrong happened while setting up the connection");
+            throw new IOException("Oops, something wrong happened while setting up the connection", e);
         }
 
         return connection;
@@ -113,7 +113,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
             dataOutStream.writeBytes(employeeJson);
             dataOutStream.flush();
         } catch (IOException e) {
-            throw new IOException("Oops, something wrong happened while posting the search - " + e.getMessage());
+            throw new IOException("Oops, something wrong happened while posting the search", e);
         }
     }
 
@@ -135,7 +135,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
                 response.append(bufferString);
             }
         } catch (IOException e) {
-            throw new IOException("Oops, something wrong happened while reading the search response - " + e.getMessage());
+            throw new IOException("Oops, something wrong happened while reading the search response", e);
         }
 
         return response.toString();
@@ -155,7 +155,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
 
             return (ArrayOfColleague) unmarshaller.unmarshal(new StringReader(xml));
         } catch (JAXBException e) {
-            throw new JAXBException("Oops, something wrong happened while unmarshalling the XML - " + e.getMessage());
+            throw new JAXBException("Oops, something wrong happened while unmarshalling the XML", e);
         }
     }
 

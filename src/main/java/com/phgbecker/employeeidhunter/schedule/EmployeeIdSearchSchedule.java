@@ -24,13 +24,13 @@ public class EmployeeIdSearchSchedule {
     /**
      * Schedule task that hunts for employee IDs
      */
-    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelayString = "${schedule.search.delay}")
     public void search() {
         employees.stream()
                 .filter(new EmployeeWithoutId())
                 .forEach(new SearchEmployeeId().andThen(new NotifyEmployee()));
 
-        employeeDAO.saveToFile(employees);
+        employeeDAO.save(employees);
     }
 
 }

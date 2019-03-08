@@ -31,10 +31,14 @@ public class EmployeeDAO {
     public List<Employee> getEmployees() throws IOException {
         log.info("Reading employees from file: {}", EMPLOYEES_FILE);
 
-        return objectMapper.readValue(
+        List<Employee> employees = objectMapper.readValue(
                 new File(EMPLOYEES_FILE),
                 objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class)
         );
+
+        log.info("Read {} employee(s) from file", employees.size());
+
+        return employees;
     }
 
     /**
@@ -42,9 +46,9 @@ public class EmployeeDAO {
      *
      * @param employees List<Employee>
      */
-    public void saveToFile(List<Employee> employees) {
+    public void save(List<Employee> employees) {
         try {
-            log.info("Saving {} employee(s) to file: {}",employees.size(),  EMPLOYEES_FILE);
+            log.info("Saving employees to file: {}", EMPLOYEES_FILE);
 
             objectWriter.writeValue(
                     new File(EMPLOYEES_FILE),

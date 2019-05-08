@@ -1,87 +1,62 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
+import com.phgbecker.employeeidhunter.entity.ArrayOfColleague;
+import com.phgbecker.employeeidhunter.entity.Colleague;
+import com.phgbecker.employeeidhunter.entity.Employee;
+import com.phgbecker.employeeidhunter.entity.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.phgbecker.employeeidhunter.entity.ArrayOfColleague;
-import com.phgbecker.employeeidhunter.entity.Employee;
-import com.phgbecker.employeeidhunter.entity.Search;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class SearchEmployeeId implements Consumer<Employee> {
-    private static Logger log = LoggerFactory.getLogger(SearchEmployeeId.class);
+    private static final Logger log = LoggerFactory.getLogger(SearchEmployeeId.class);
     private static final String API_URL = "";
     private static final String API_AUTH_TOKEN = "";
-    private static final String NAMESPACE = "";
 
     /**
-     * Given a Consumer<Employee>, search the API for a match updating the ID if so
+     * Given a Consumer<Employee> search the API for a match, updating the ID if so
      */
     @Override
     public void accept(Employee employee) {
         log.info("Searching for employee {} credentials", employee);
 
         Search search = new Search(employee.getLastName() + ", " + employee.getFirstName(), 1);
-        JsonNode jsonNode = new ObjectMapper().valueToTree(search);
 
         try {
-            HttpURLConnection connectionInstance = getHttpURLConnection();
-
-            postEmployeeSearch(jsonNode.toString(), connectionInstance);
-
-            String searchResponse = getEmployeeSearchResponse(connectionInstance);
+            String searchResponse = searchEmployee(search);
 
             if (!searchResponse.isEmpty()) {
-                // Removes the default namespace to avoid parsing marshalling errors
-                String xml = searchResponse.replace(NAMESPACE, "");
 
-                ArrayOfColleague colleagues = xmlToArrayOfColleague(xml);
-
-                if (colleagues.getColleagues() != null && !colleagues.getColleagues().isEmpty()) {
-                    // If a match was found, update the Employee ID attribute
-                    String id = colleagues.getColleagues().get(0).getAccountName();
-                    employee.setId(id);
-                }
+                filterColleagueFromResponse(search, searchResponse)
+                        .ifPresent(colleague -> employee.setId(colleague.getAccountName()));
             }
 
         } catch (Exception e) {
             log.error("Oops, an exception happened while searching for an employee", e);
         }
 
-        // Sleeps 2s to avoid DoS
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            log.error("Oops, an exception happened while sleeping the thread", e);
-
-            Thread.currentThread().interrupt();
-        }
+        sleepToAvoidDenialOfService();
     }
 
-    /**
-     * Sets up and returns the connection instance
-     *
-     * @return Connection instance
-     * @throws IOException Exception
-     */
-    private HttpURLConnection getHttpURLConnection() throws IOException {
+    private String searchEmployee(Search search) throws IOException {
+        String searchJson = search.convertToJson();
+        HttpURLConnection connection = getConnection();
+
+        postEmployeeSearch(searchJson, connection);
+
+        return getEmployeeSearchResponse(connection);
+    }
+
+    private HttpURLConnection getConnection() throws IOException {
         HttpURLConnection connection;
 
         try {
@@ -101,29 +76,15 @@ public class SearchEmployeeId implements Consumer<Employee> {
         return connection;
     }
 
-    /**
-     * POST the employee search
-     *
-     * @param employeeJson Employee JSON file
-     * @param connection   Connection instance
-     * @throws IOException OutputStream IOException
-     */
-    private void postEmployeeSearch(String employeeJson, HttpURLConnection connection) throws IOException {
+    private void postEmployeeSearch(String search, HttpURLConnection connection) throws IOException {
         try (DataOutputStream dataOutStream = new DataOutputStream(connection.getOutputStream())) {
-            dataOutStream.writeBytes(employeeJson);
+            dataOutStream.writeBytes(search);
             dataOutStream.flush();
         } catch (IOException e) {
             throw new IOException("Oops, something wrong happened while posting the search", e);
         }
     }
 
-    /**
-     * Reads the search response
-     *
-     * @param connection Connection instance
-     * @return String
-     * @throws IOException Exception
-     */
     private String getEmployeeSearchResponse(HttpURLConnection connection) throws IOException {
         InputStream stream = connection.getInputStream();
         StringBuilder response = new StringBuilder();
@@ -141,21 +102,26 @@ public class SearchEmployeeId implements Consumer<Employee> {
         return response.toString();
     }
 
-    /**
-     * Given an XML, unmarshalls it to an ArrayOfColleague
-     *
-     * @param xml XML
-     * @return ArrayOfColleague
-     * @throws JAXBException Exception
-     */
-    private ArrayOfColleague xmlToArrayOfColleague(String xml) throws JAXBException {
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(ArrayOfColleague.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+    private Optional<Colleague> filterColleagueFromResponse(Search search, String searchResponse) throws XMLStreamException, JAXBException {
+        Optional<Colleague> colleague = Optional.empty();
+        ArrayOfColleague colleagues = ArrayOfColleague.xmlToArrayOfColleague(searchResponse);
 
-            return (ArrayOfColleague) unmarshaller.unmarshal(new StringReader(xml));
-        } catch (JAXBException e) {
-            throw new JAXBException("Oops, something wrong happened while unmarshalling the XML", e);
+        if (colleagues.getColleagues() != null && !colleagues.getColleagues().isEmpty()) {
+            colleague = colleagues.getColleagues().stream()
+                    .filter(c -> search.getSearchItem().equals(c.getName()))
+                    .findFirst();
+        }
+
+        return colleague;
+    }
+
+    private void sleepToAvoidDenialOfService() {
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            log.error("Oops, an exception happened while sleeping the thread", e);
+
+            Thread.currentThread().interrupt();
         }
     }
 

@@ -1,13 +1,11 @@
 package com.phgbecker.employeeidhunter.entity;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.util.Optional;
 
 @Getter
-@Setter
 public class Employee {
     private String id;
     private String firstName;
@@ -25,6 +23,10 @@ public class Employee {
         this.email = email;
         this.mobileDDD = mobileDDD;
         this.mobileNumber = mobileNumber;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

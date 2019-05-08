@@ -5,6 +5,7 @@
   ### To manually import the local JAR to your MAVEN repository, go to the _resources_ folder, then run:
   
   ```
+  
   mvn install:install-file \
   	-Dfile=service-smscep-1.0-SNAPSHOT.jar \
   	-DgroupId=com.byjg \
@@ -12,4 +13,5 @@
   	-Dversion=1.0-SNAPSHOT \
   	-Dpackaging=jar \
   	-DgeneratePom=true
+  	
   ```

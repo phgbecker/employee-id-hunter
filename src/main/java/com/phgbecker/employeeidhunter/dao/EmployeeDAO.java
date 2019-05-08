@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.util.List;
 
 public class EmployeeDAO {
-    private static Logger log = LoggerFactory.getLogger(EmployeeDAO.class);
+    private static final Logger log = LoggerFactory.getLogger(EmployeeDAO.class);
     private static final String EMPLOYEES_FILE = "employees.json";
-    private ObjectMapper objectMapper;
-    private ObjectWriter objectWriter;
+    private final ObjectMapper objectMapper;
+    private final ObjectWriter objectWriter;
 
     public EmployeeDAO() {
         objectMapper = new ObjectMapper();

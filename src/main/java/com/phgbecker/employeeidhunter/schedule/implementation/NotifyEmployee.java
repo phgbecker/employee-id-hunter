@@ -1,19 +1,18 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
+import com.byjg.services.ByJGWebServiceException;
+import com.byjg.services.sms.SMSService;
+import com.phgbecker.employeeidhunter.entity.Employee;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.byjg.services.ByJGWebServiceException;
-import com.byjg.services.sms.SMSService;
-import com.phgbecker.employeeidhunter.entity.Employee;
-
 public class NotifyEmployee implements Consumer<Employee> {
-    private static Logger log = LoggerFactory.getLogger(NotifyEmployee.class);
-    private static SMSService smsService = new SMSService("", "");
+    private static final Logger log = LoggerFactory.getLogger(NotifyEmployee.class);
+    private static final SMSService smsService = new SMSService("", "");
     private static final String DEFAULT_MESSAGE = "Dear %s, take note, your credential has arrived: %s (by eID Hunter)";
 
     @Override

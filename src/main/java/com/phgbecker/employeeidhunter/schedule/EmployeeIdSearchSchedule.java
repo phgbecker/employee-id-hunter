@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class EmployeeIdSearchSchedule {
-    private EmployeeDAO employeeDAO;
+    private final EmployeeDAO employeeDAO;
     private List<Employee> employees;
 
     public EmployeeIdSearchSchedule() throws IOException {

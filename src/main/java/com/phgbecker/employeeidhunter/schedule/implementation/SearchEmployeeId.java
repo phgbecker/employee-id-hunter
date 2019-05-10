@@ -51,7 +51,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
         Optional<Colleague> colleague = Optional.empty();
         ArrayOfColleague colleagues = ArrayOfColleague.xmlToArrayOfColleague(searchResponse);
 
-        if (colleagues.getColleagues() != null && !colleagues.getColleagues().isEmpty()) {
+        if (!colleagues.getColleagues().isEmpty()) {
             colleague = colleagues.getColleagues().stream()
                     .filter(c -> search.getSearchTerm().equals(c.getName()))
                     .findFirst();

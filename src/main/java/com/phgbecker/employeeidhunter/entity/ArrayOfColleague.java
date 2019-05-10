@@ -20,7 +20,7 @@ public class ArrayOfColleague {
     private List<Colleague> colleagues;
 
     public List<Colleague> getColleagues() {
-        return Collections.unmodifiableList(colleagues);
+        return colleagues == null ? Collections.emptyList() : Collections.unmodifiableList(colleagues);
     }
 
     /**

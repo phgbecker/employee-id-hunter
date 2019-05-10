@@ -7,12 +7,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @XmlRootElement(name = "ArrayOfColleague")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,25 +30,23 @@ public class ArrayOfColleague {
      * @return ArrayOfColleague
      * @throws JAXBException Exception
      */
-    public static ArrayOfColleague xmlToArrayOfColleague(String xml) throws XMLStreamException, JAXBException {
-
+    public static ArrayOfColleague xmlToArrayOfColleague(String xml) throws JAXBException {
         try {
-            XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-
-            // To avoid unmarshalling errors, change default behaviour
-            xmlInputFactory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
-
-            XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(new StreamSource(xml));
-
             JAXBContext jaxbContext = JAXBContext.newInstance(ArrayOfColleague.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            return (ArrayOfColleague) unmarshaller.unmarshal(xmlStreamReader);
-        } catch (XMLStreamException e) {
-            throw new XMLStreamException("Oops, something wrong happened while reading the XML", e);
+            return (ArrayOfColleague) unmarshaller.unmarshal(
+                    new StringReader(removeXmlNamespace(xml))
+            );
         } catch (JAXBException e) {
             throw new JAXBException("Oops, something wrong happened while unmarshalling the XML", e);
         }
+    }
+
+    private static String removeXmlNamespace(String xml) {
+        Objects.requireNonNull(xml, "The XML has not been supplied");
+
+        return xml.replaceFirst("xmlns[^\"]+\"[^\"]+\"", "");
     }
 
 }

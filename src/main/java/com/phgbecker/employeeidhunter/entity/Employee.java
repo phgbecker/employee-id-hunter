@@ -14,17 +14,6 @@ public class Employee {
     private String mobileDDD;
     private String mobileNumber;
 
-    public Employee() {
-    }
-
-    public Employee(String firstName, String lastName, String email, String mobileDDD, String mobileNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.mobileDDD = mobileDDD;
-        this.mobileNumber = mobileNumber;
-    }
-
     public void setId(String id) {
         this.id = id;
     }

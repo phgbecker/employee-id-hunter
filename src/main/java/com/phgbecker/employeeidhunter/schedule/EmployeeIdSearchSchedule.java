@@ -5,6 +5,8 @@ import com.phgbecker.employeeidhunter.entity.Employee;
 import com.phgbecker.employeeidhunter.schedule.implementation.EmployeeWithoutId;
 import com.phgbecker.employeeidhunter.schedule.implementation.NotifyEmployee;
 import com.phgbecker.employeeidhunter.schedule.implementation.SearchEmployeeId;
+import com.phgbecker.employeeidhunter.schedule.implementation.configuration.SearchConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +16,13 @@ import java.util.List;
 @Component
 public class EmployeeIdSearchSchedule {
     private final EmployeeDAO employeeDAO;
+    private final SearchConfiguration searchConfiguration;
     private List<Employee> employees;
 
-    public EmployeeIdSearchSchedule() throws IOException {
-        employeeDAO = new EmployeeDAO();
+    @Autowired
+    public EmployeeIdSearchSchedule(SearchConfiguration searchConfiguration, EmployeeDAO employeeDAO) throws IOException {
+        this.searchConfiguration = searchConfiguration;
+        this.employeeDAO = employeeDAO;
         employees = employeeDAO.getEmployees();
     }
 

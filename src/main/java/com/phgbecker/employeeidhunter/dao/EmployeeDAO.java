@@ -6,16 +6,21 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.phgbecker.employeeidhunter.entity.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@Component
 public class EmployeeDAO {
     private static final Logger log = LoggerFactory.getLogger(EmployeeDAO.class);
-    private static final String EMPLOYEES_FILE = "employees.json";
     private final ObjectMapper objectMapper;
     private final ObjectWriter objectWriter;
+
+    @Value("${employees.file}")
+    private String employeesFile;
 
     public EmployeeDAO() {
         objectMapper = new ObjectMapper();
@@ -29,10 +34,10 @@ public class EmployeeDAO {
      * @throws IOException File not found, or JSON mapping problems
      */
     public List<Employee> getEmployees() throws IOException {
-        log.info("Reading employees from file: {}", EMPLOYEES_FILE);
+        log.info("Reading employees from file: {}", employeesFile);
 
         List<Employee> employees = objectMapper.readValue(
-                new File(EMPLOYEES_FILE),
+                new File(employeesFile),
                 objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class)
         );
 
@@ -48,10 +53,10 @@ public class EmployeeDAO {
      */
     public void save(List<Employee> employees) {
         try {
-            log.info("Saving employees to file: {}", EMPLOYEES_FILE);
+            log.info("Saving employees to file: {}", employeesFile);
 
             objectWriter.writeValue(
-                    new File(EMPLOYEES_FILE),
+                    new File(employeesFile),
                     employees
             );
         } catch (IOException e) {

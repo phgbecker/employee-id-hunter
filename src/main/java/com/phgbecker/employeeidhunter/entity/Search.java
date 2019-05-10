@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class Search {
-    private final String searchItem;
+    private final String searchTerm;
     private final int maxItems;
 
-    public Search(String searchItem, int maxItems) {
-        this.searchItem = searchItem;
+    public Search(String searchTerm, int maxItems) {
+        this.searchTerm = searchTerm;
         this.maxItems = maxItems;
     }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -31,17 +32,21 @@ public class EmployeeDAO {
      * Return a list of Employee from a JSON file
      *
      * @return Employees
-     * @throws IOException File not found, or JSON mapping problems
      */
-    public List<Employee> getEmployees() throws IOException {
+    public List<Employee> getEmployees() {
         log.info("Reading employees from file: {}", employeesFile);
 
-        List<Employee> employees = objectMapper.readValue(
-                new File(employeesFile),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class)
-        );
+        List<Employee> employees = Collections.emptyList();
+        try {
+            employees = objectMapper.readValue(
+                    new File(employeesFile),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class)
+            );
 
-        log.info("Read {} employee(s) from file", employees.size());
+            log.info("Read {} employee(s) from file", employees.size());
+        } catch (IOException e) {
+            log.error("Oops, something wrong happened while reading the employees file", e);
+        }
 
         return employees;
     }

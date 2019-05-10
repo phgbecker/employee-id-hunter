@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -20,10 +19,10 @@ public class EmployeeIdSearchSchedule {
     private static final Logger log = LoggerFactory.getLogger(EmployeeIdSearchSchedule.class);
     private final EmployeeDAO employeeDAO;
     private final SearchConfiguration searchConfiguration;
-    private List<Employee> employees;
+    private final List<Employee> employees;
 
     @Autowired
-    public EmployeeIdSearchSchedule(SearchConfiguration searchConfiguration, EmployeeDAO employeeDAO) throws IOException {
+    public EmployeeIdSearchSchedule(SearchConfiguration searchConfiguration, EmployeeDAO employeeDAO) {
         this.searchConfiguration = searchConfiguration;
         this.employeeDAO = employeeDAO;
         employees = employeeDAO.getEmployees();

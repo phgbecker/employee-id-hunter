@@ -44,7 +44,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
     private String searchEmployee(Search search) throws IOException {
         String searchJson = search.convertToJson();
 
-        return SearchRequest.search(searchJson);
+        return SearchRequest.getInstance().search(searchJson);
     }
 
     private Optional<Colleague> filterColleagueFromResponse(Search search, String searchResponse) throws JAXBException {

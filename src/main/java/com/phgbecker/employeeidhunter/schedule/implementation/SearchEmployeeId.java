@@ -53,7 +53,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
 
         if (!colleagues.getColleagues().isEmpty()) {
             colleague = colleagues.getColleagues().stream()
-                    .filter(c -> search.getSearchTerm().equals(c.getName()))
+                    .filter(c -> search.getSearchTerm().equalsIgnoreCase(c.getName()))
                     .findFirst();
         }
 

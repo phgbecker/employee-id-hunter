@@ -3,10 +3,7 @@ package com.phgbecker.employeeidhunter.schedule;
 import com.phgbecker.employeeidhunter.dao.EmployeeDAO;
 import com.phgbecker.employeeidhunter.entity.Employee;
 import com.phgbecker.employeeidhunter.entity.SearchConfiguration;
-import com.phgbecker.employeeidhunter.schedule.implementation.EmployeeWithoutId;
-import com.phgbecker.employeeidhunter.schedule.implementation.NotifyEmployee;
-import com.phgbecker.employeeidhunter.schedule.implementation.SearchEmployeeId;
-import com.phgbecker.employeeidhunter.schedule.implementation.SmsNotification;
+import com.phgbecker.employeeidhunter.schedule.implementation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +33,13 @@ public class EmployeeIdSearchSchedule {
     @Scheduled(fixedDelayString = "${schedule.search.delay}")
     public void search() {
         employees.stream()
-                .filter(new EmployeeWithoutId())
+                .filter(
+                        new EmployeeWithoutId()
+                )
                 .forEach(
                         new SearchEmployeeId(searchConfiguration)
                                 .andThen(new NotifyEmployee(Collections.singletonList(new SmsNotification(searchConfiguration))))
+                                .andThen(new SleepToAvoidDenialOfService())
                 );
 
         employeeDAO.save(employees);

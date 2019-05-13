@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class SearchEmployeeId implements Consumer<Employee> {
@@ -38,8 +37,6 @@ public class SearchEmployeeId implements Consumer<Employee> {
         } catch (Exception e) {
             log.error("Oops, an exception happened while searching for an employee", e);
         }
-
-        sleepToAvoidDenialOfService();
     }
 
     private String searchEmployee(Search search) throws IOException {
@@ -60,16 +57,6 @@ public class SearchEmployeeId implements Consumer<Employee> {
         }
 
         return colleague;
-    }
-
-    private void sleepToAvoidDenialOfService() {
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            log.error("Oops, an exception happened while sleeping the thread", e);
-
-            Thread.currentThread().interrupt();
-        }
     }
 
 }

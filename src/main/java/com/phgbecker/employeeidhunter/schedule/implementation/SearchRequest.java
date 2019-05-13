@@ -1,5 +1,6 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
+import com.phgbecker.employeeidhunter.entity.SearchConfiguration;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
@@ -22,30 +23,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 public class SearchRequest {
-    private static SearchRequest searchRequestInstance;
-    private final HttpClientBuilder httpClientBuilder;
+    private final SearchConfiguration searchConfiguration;
 
-    private static final String API_URL = "";
-    private static final String AUTH_USERNAME = "";
-    private static final String AUTH_PASSWORD = "";
-    private static final String AUTH_DOMAIN = "";
-
-    private SearchRequest() {
-        Registry<AuthSchemeProvider> authSchemeRegistry = setupAuthSchemeProviderRegistry();
-        BasicCredentialsProvider credentialsProvider = setupCredentialsProvider();
-
-        httpClientBuilder = setupHttpClientBuilder(authSchemeRegistry, credentialsProvider);
-    }
-
-    public static SearchRequest getInstance() {
-        if (searchRequestInstance == null) {
-            searchRequestInstance = new SearchRequest();
-        }
-
-        return searchRequestInstance;
+    public SearchRequest(SearchConfiguration searchConfiguration) {
+        this.searchConfiguration = searchConfiguration;
     }
 
     public String search(String search) throws IOException {
+        Registry<AuthSchemeProvider> authSchemeRegistry = setupAuthSchemeProviderRegistry();
+        BasicCredentialsProvider credentialsProvider = setupCredentialsProvider();
+
+        HttpClientBuilder httpClientBuilder = setupHttpClientBuilder(authSchemeRegistry, credentialsProvider);
         HttpResponse response = postSearch(search, httpClientBuilder);
 
         return EntityUtils.toString(response.getEntity());
@@ -61,7 +49,12 @@ public class SearchRequest {
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
                 AuthScope.ANY,
-                new NTCredentials(AUTH_USERNAME, AUTH_PASSWORD, null, AUTH_DOMAIN)
+                new NTCredentials(
+                        searchConfiguration.getApiNtlmUsername(),
+                        searchConfiguration.getApiNtlmPassword(),
+                        null,
+                        searchConfiguration.getApiNtlmDomain()
+                )
         );
 
         return credentialsProvider;
@@ -75,7 +68,7 @@ public class SearchRequest {
     }
 
     private HttpResponse postSearch(String search, HttpClientBuilder httpClientBuilder) throws IOException {
-        HttpPost httpPost = new HttpPost(API_URL);
+        HttpPost httpPost = new HttpPost(searchConfiguration.getApiUrl());
         httpPost.setConfig(RequestConfig.custom().setTargetPreferredAuthSchemes(Collections.singletonList("NTLM")).build());
         httpPost.setHeader("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         httpPost.setEntity(new StringEntity(search, StandardCharsets.UTF_8));

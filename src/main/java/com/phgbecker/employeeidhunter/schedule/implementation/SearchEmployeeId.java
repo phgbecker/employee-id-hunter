@@ -1,9 +1,6 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
-import com.phgbecker.employeeidhunter.entity.ArrayOfColleague;
-import com.phgbecker.employeeidhunter.entity.Colleague;
-import com.phgbecker.employeeidhunter.entity.Employee;
-import com.phgbecker.employeeidhunter.entity.Search;
+import com.phgbecker.employeeidhunter.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +12,11 @@ import java.util.function.Consumer;
 
 public class SearchEmployeeId implements Consumer<Employee> {
     private static final Logger log = LoggerFactory.getLogger(SearchEmployeeId.class);
+    private final SearchConfiguration searchConfiguration;
+
+    public SearchEmployeeId(SearchConfiguration searchConfiguration) {
+        this.searchConfiguration = searchConfiguration;
+    }
 
     /**
      * Given a Consumer<Employee> search the API for a match, updating the ID if so
@@ -29,7 +31,6 @@ public class SearchEmployeeId implements Consumer<Employee> {
             String searchResponse = searchEmployee(search);
 
             if (!searchResponse.isEmpty()) {
-
                 filterColleagueFromResponse(search, searchResponse)
                         .ifPresent(colleague -> employee.setId(colleague.getAccountName()));
             }
@@ -43,8 +44,9 @@ public class SearchEmployeeId implements Consumer<Employee> {
 
     private String searchEmployee(Search search) throws IOException {
         String searchJson = search.convertToJson();
+        SearchRequest searchRequest = new SearchRequest(searchConfiguration);
 
-        return SearchRequest.getInstance().search(searchJson);
+        return searchRequest.search(searchJson);
     }
 
     private Optional<Colleague> filterColleagueFromResponse(Search search, String searchResponse) throws JAXBException {

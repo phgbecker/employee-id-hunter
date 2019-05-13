@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +45,8 @@ public class EmployeeDAO {
             );
 
             log.info("Read {} employee(s) from file", employees.size());
+        } catch (FileNotFoundException e) {
+            log.error("Oops, the employees file wasn't found: {}", e.getMessage());
         } catch (IOException e) {
             log.error("Oops, something wrong happened while reading the employees file", e);
         }

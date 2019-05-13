@@ -5,7 +5,7 @@ import com.phgbecker.employeeidhunter.entity.Employee;
 import com.phgbecker.employeeidhunter.schedule.implementation.EmployeeWithoutId;
 import com.phgbecker.employeeidhunter.schedule.implementation.NotifyEmployee;
 import com.phgbecker.employeeidhunter.schedule.implementation.SearchEmployeeId;
-import com.phgbecker.employeeidhunter.schedule.implementation.configuration.SearchConfiguration;
+import com.phgbecker.employeeidhunter.entity.SearchConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,10 @@ public class EmployeeIdSearchSchedule {
 
         employeeDAO.save(employees);
 
-        checkIfScheduleJobShouldStop();
+        checkIfSearchShouldStop();
     }
 
-    private void checkIfScheduleJobShouldStop() {
+    private void checkIfSearchShouldStop() {
         if (employees.stream().noneMatch(new EmployeeWithoutId())) {
             log.info("No more IDs need to be look up. Shutting down application!");
             System.exit(0);

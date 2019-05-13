@@ -1,4 +1,4 @@
-package com.phgbecker.employeeidhunter.schedule.implementation.configuration;
+package com.phgbecker.employeeidhunter.entity;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

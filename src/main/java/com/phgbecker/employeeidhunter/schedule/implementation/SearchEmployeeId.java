@@ -24,7 +24,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
     public void accept(Employee employee) {
         log.info("Searching for employee {} credentials", employee);
 
-        Search search = new Search(employee.getLastName() + ", " + employee.getFirstName(), 50);
+        Search search = new Search(employee.getNameOrderedBySurname(), 50);
 
         try {
             String searchResponse = searchEmployee(search);

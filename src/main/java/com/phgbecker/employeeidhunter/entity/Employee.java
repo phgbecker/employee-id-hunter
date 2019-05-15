@@ -13,6 +13,7 @@ public class Employee {
     private String email;
     private String mobileDDD;
     private String mobileNumber;
+    private static final String FULL_NAME_NOT_PROVIDED = "The attribute \"fullName\" hasn't been provided";
 
     public void setId(String id) {
         this.id = id;
@@ -25,25 +26,25 @@ public class Employee {
 
     @JsonIgnore
     public String getFirstName() {
-        Objects.requireNonNull(fullName, "The attribute fullName hasn't been provided");
+        Objects.requireNonNull(fullName, FULL_NAME_NOT_PROVIDED);
 
-        return fullName.substring(0, fullName.indexOf(" "));
+        return fullName.substring(0, fullName.indexOf(' '));
     }
 
     @JsonIgnore
     public String getLastName() {
-        Objects.requireNonNull(fullName, "The attribute fullName hasn't been provided");
+        Objects.requireNonNull(fullName, FULL_NAME_NOT_PROVIDED);
 
-        return fullName.substring(fullName.lastIndexOf(" "));
+        return fullName.substring(fullName.lastIndexOf(' '));
     }
 
     @JsonIgnore
     public String getNameOrderedBySurname() {
-        Objects.requireNonNull(fullName, "The attribute fullName hasn't been provided");
+        Objects.requireNonNull(fullName, FULL_NAME_NOT_PROVIDED);
 
         if (fullName.trim().split(" ").length > 1) {
-            String firstName = fullName.substring(0, fullName.indexOf(" "));
-            String lastName = fullName.substring(fullName.lastIndexOf(" ") + 1);
+            String firstName = fullName.substring(0, fullName.indexOf(' '));
+            String lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
 
             return lastName + ", " + firstName;
         }

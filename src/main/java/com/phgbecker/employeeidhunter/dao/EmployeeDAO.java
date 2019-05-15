@@ -61,12 +61,14 @@ public class EmployeeDAO {
      */
     public void save(List<Employee> employees) {
         try {
-            log.info("Saving employees to file: {}", employeesFile);
+            if (!employees.isEmpty()) {
+                log.info("Saving employees to file: {}", employeesFile);
 
-            objectWriter.writeValue(
-                    new File(employeesFile),
-                    employees
-            );
+                objectWriter.writeValue(
+                        new File(employeesFile),
+                        employees
+                );
+            }
         } catch (IOException e) {
             log.error("Oops, something wrong happened while saving the resources", e);
         }

@@ -13,7 +13,13 @@ public class Employee {
     private String email;
     private String mobileDDD;
     private String mobileNumber;
-    private static final String FULL_NAME_NOT_PROVIDED = "The attribute \"fullName\" hasn't been provided";
+
+    public Employee() {
+    }
+
+    public Employee(String fullName) {
+        this.fullName = fullName;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -26,23 +32,21 @@ public class Employee {
 
     @JsonIgnore
     public String getFirstName() {
-        Objects.requireNonNull(fullName, FULL_NAME_NOT_PROVIDED);
-
-        return fullName.substring(0, fullName.indexOf(' '));
+        return isFullName() ? fullName.substring(0, fullName.indexOf(' ')) : fullName;
     }
 
     @JsonIgnore
     public String getLastName() {
-        Objects.requireNonNull(fullName, FULL_NAME_NOT_PROVIDED);
+        if (!isFullName()) {
+            throw new IndexOutOfBoundsException(fullName + " has no last names");
+        }
 
-        return fullName.substring(fullName.lastIndexOf(' '));
+        return fullName.substring(fullName.lastIndexOf(' ') + 1);
     }
 
     @JsonIgnore
     public String getNameOrderedBySurname() {
-        Objects.requireNonNull(fullName, FULL_NAME_NOT_PROVIDED);
-
-        if (fullName.trim().split(" ").length > 1) {
+        if (isFullName()) {
             String firstName = fullName.substring(0, fullName.indexOf(' '));
             String lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
 
@@ -50,6 +54,12 @@ public class Employee {
         }
 
         return fullName.trim();
+    }
+
+    private boolean isFullName() {
+        Objects.requireNonNull(fullName, "The attribute \"fullName\" hasn't been provided");
+
+        return fullName.trim().split(" ").length > 1;
     }
 
     @JsonIgnore

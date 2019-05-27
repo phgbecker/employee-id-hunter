@@ -18,7 +18,13 @@ public class Colleague {
     @XmlElement(name = "Name")
     private String name;
 
-    @XmlElement(name = "TextAlias")
-    private String textAlias;
+    public Colleague() {
+
+    }
+
+    public Colleague(String accountName, String name) {
+        this.accountName = accountName;
+        this.name = name;
+    }
 
 }

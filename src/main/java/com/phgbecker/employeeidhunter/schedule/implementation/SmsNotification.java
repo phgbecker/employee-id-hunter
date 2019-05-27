@@ -34,11 +34,13 @@ public class SmsNotification implements SearchNotification {
                         searchConfiguration.getSmsServicePassword()
                 );
 
-                smsService.enviarSMS(
+                String smsResponse = smsService.enviarSMS(
                         mobileDDD.get(),
                         mobileNumber.get(),
                         String.format(searchConfiguration.getSmsNotificationMessage(), employee.getFirstName(), employee.getId())
                 );
+
+                log.info("The SMS notification service response was: {}", smsResponse);
             }
         } catch (IOException | ByJGWebServiceException e) {
             log.error("Oops, something wrong happened while sending an SMS to the employee", e);

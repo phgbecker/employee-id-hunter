@@ -25,7 +25,7 @@ public class NotifyEmployee implements Consumer<Employee> {
             log.info("{} credentials were found ({})", employee, id.get());
 
             if (notifications != null)
-                notifications.forEach(notification -> notification.notifyEmployee(employee));
+                notifications.forEach(searchNotification -> searchNotification.notifyEmployee(employee));
 
         } else {
             log.info("{} has no credentials yet", employee);

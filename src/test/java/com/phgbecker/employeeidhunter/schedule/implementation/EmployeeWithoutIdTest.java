@@ -1,9 +1,10 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
 import com.phgbecker.employeeidhunter.entity.Employee;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmployeeWithoutIdTest {
 
@@ -18,7 +19,7 @@ public class EmployeeWithoutIdTest {
     public void givenAnEmployeeWithId_whenApplyingEmployeeWithoutIdPredicate_thenFalse() {
         employee.setId("eID");
 
-        Assertions.assertThat(
+        assertThat(
                 new EmployeeWithoutId().test(employee)
         ).isFalse();
     }
@@ -27,7 +28,7 @@ public class EmployeeWithoutIdTest {
     public void givenAnEmployeeWithoutId_whenApplyingEmployeeWithoutIdPredicate_thenTrue() {
         employee.setId(null);
 
-        Assertions.assertThat(
+        assertThat(
                 new EmployeeWithoutId().test(employee)
         ).isTrue();
     }

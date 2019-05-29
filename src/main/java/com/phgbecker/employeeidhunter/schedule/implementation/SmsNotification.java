@@ -43,9 +43,8 @@ public class SmsNotification implements SearchNotification {
                 log.info("The SMS notification service response was: {}", smsResponse);
             }
         } catch (IOException | ByJGWebServiceException e) {
-            log.error("Oops, something wrong happened while sending an SMS to the employee", e);
+            log.error("Oops, something wrong happened while sending a SMS to the employee", e);
         }
-
     }
 
 }

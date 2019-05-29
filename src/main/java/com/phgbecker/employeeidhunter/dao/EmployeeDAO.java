@@ -21,12 +21,13 @@ public class EmployeeDAO {
     private final ObjectMapper objectMapper;
     private final ObjectWriter objectWriter;
 
-    @Value("${employees.file}")
     private String employeesFile;
 
-    public EmployeeDAO() {
+    public EmployeeDAO(@Value("${employees.file}") String employeesFile) {
         objectMapper = new ObjectMapper();
         objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
+
+        this.employeesFile = employeesFile;
     }
 
     /**

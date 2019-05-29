@@ -14,11 +14,7 @@ public class Search {
     }
 
     public String convertToJson() {
-        try {
-            return new ObjectMapper().valueToTree(this).toString();
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Oops, something wrong happened while converting the search to JSON", e);
-        }
+        return new ObjectMapper().valueToTree(this).toString();
     }
 
 }

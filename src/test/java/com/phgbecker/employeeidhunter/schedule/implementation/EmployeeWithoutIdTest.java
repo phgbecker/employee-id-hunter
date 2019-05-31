@@ -1,17 +1,17 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
 import com.phgbecker.employeeidhunter.entity.Employee;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmployeeWithoutIdTest {
 
-    private Employee employee;
+    private static Employee employee;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         employee = new Employee();
     }
 

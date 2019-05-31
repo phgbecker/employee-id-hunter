@@ -1,6 +1,6 @@
 package com.phgbecker.employeeidhunter.entity;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,11 +8,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class EmployeeTest {
 
-    private Employee employeeWithFullName;
-    private Employee employeeWithoutFullName;
+    private static Employee employeeWithFullName;
+    private static Employee employeeWithoutFullName;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         employeeWithFullName = new Employee("John Doe");
         employeeWithoutFullName = new Employee("John");
     }

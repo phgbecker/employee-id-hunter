@@ -1,8 +1,8 @@
 package com.phgbecker.employeeidhunter.dao;
 
 import com.phgbecker.employeeidhunter.entity.Employee;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.*;
@@ -13,11 +13,11 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmployeeDAOTest {
-    private String employeesTestFile;
-    private EmployeeDAO employeeDAO;
+    private static String employeesTestFile;
+    private static EmployeeDAO employeeDAO;
 
-    @Before
-    public void setUp() throws IOException {
+    @BeforeClass
+    public static void setUp() throws IOException {
         employeesTestFile = "employeesTestFile.json";
         String employeesTestFileContents = "[{\"fullName\":\"John Doe\"}]";
 
@@ -28,8 +28,8 @@ public class EmployeeDAOTest {
         employeeDAO = new EmployeeDAO(employeesTestFile);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         Files.delete(Paths.get(employeesTestFile));
     }
 

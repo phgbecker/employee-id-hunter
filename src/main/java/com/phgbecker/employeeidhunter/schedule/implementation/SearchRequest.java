@@ -1,8 +1,10 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
 import com.phgbecker.employeeidhunter.entity.SearchConfiguration;
+import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.InvalidCredentialsException;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
@@ -29,13 +31,17 @@ public class SearchRequest {
         this.searchConfiguration = searchConfiguration;
     }
 
-    public String search(String search) throws IOException {
+    public String search(String search) throws IOException, InvalidCredentialsException {
         Registry<AuthSchemeProvider> authSchemeRegistry = setupAuthSchemeProviderRegistry();
         BasicCredentialsProvider credentialsProvider = setupCredentialsProvider();
 
         HttpClientBuilder httpClientBuilder = setupHttpClientBuilder(authSchemeRegistry, credentialsProvider);
 
         try (CloseableHttpResponse response = postSearch(search, httpClientBuilder)) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+                throw new InvalidCredentialsException("The search request was not authorized for the given user: " + searchConfiguration.getApiNtlmUsername());
+            }
+
             return EntityUtils.toString(response.getEntity());
         }
     }

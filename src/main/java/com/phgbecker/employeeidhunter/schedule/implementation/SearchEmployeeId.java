@@ -1,6 +1,7 @@
 package com.phgbecker.employeeidhunter.schedule.implementation;
 
 import com.phgbecker.employeeidhunter.entity.*;
+import org.apache.http.auth.InvalidCredentialsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class SearchEmployeeId implements Consumer<Employee> {
         }
     }
 
-    private String searchEmployee(Search search) throws IOException {
+    private String searchEmployee(Search search) throws IOException, InvalidCredentialsException {
         String searchJson = search.convertToJson();
         SearchRequest searchRequest = new SearchRequest(searchConfiguration);
 

@@ -21,7 +21,7 @@ public class EmployeeDAO {
     private final ObjectMapper objectMapper;
     private final ObjectWriter objectWriter;
 
-    private String employeesFile;
+    private final String employeesFile;
 
     public EmployeeDAO(@Value("${employees.file}") String employeesFile) {
         objectMapper = new ObjectMapper();

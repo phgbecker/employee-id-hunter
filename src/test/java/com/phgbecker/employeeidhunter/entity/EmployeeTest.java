@@ -53,11 +53,11 @@ public class EmployeeTest {
 
     @Test
     public void givenEmployeeWithNullOptionalAttributes_whenGetOptionalAttributes_thenIsNotPresent() {
-        Employee employeeWithNullOptionalAtributes = new Employee();
+        Employee employeeWithNullOptionalAttributes = new Employee();
 
-        assertThat(employeeWithNullOptionalAtributes.getOptionalId()).isNotPresent();
-        assertThat(employeeWithNullOptionalAtributes.getOptionalMobileDDD()).isNotPresent();
-        assertThat(employeeWithNullOptionalAtributes.getOptionalMobileNumber()).isNotPresent();
+        assertThat(employeeWithNullOptionalAttributes.getOptionalId()).isNotPresent();
+        assertThat(employeeWithNullOptionalAttributes.getOptionalMobileDDD()).isNotPresent();
+        assertThat(employeeWithNullOptionalAttributes.getOptionalMobileNumber()).isNotPresent();
     }
 
 }
